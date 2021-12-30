@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        #container img {
+            background-color: transparent;
+            width: 300px;
+            height: 98px;
+            margin-bottom: 30px;
+
+        }
+
+        #container input {
+            width: 600px;
+            height: 55px;
+            border-radius: 20px;
+            background-color: rgb(45, 47, 48);
+            font-size: 20px;
+
+        }
+
+        #box {
+
+            margin: auto;
+            /* background-color: brown; */
+            text-align: center;
+            margin-top: 240px;
+        }
+
+        #container {
+
+            position: absolute;
+            width: 100%;
+            height: 1000vh;
+            overflow: hidden;
+            background-color: rgb(17, 11, 11);
+        }
+
+        #win {
+
+            background-color: rgb(45, 47, 48);
+            width: 600px;
+            text-align: left;
+            margin: auto;
+            color: white;
+            font-size: 20px;
+            margin-top: 0px;
+            /* border: 2px solid rgb(63, 13, 13); */
+            border-radius: 0px;
+
+
+
+        }
+
+        #container .star {
+
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+
+            animation: animate 10s ease-in-out
+        }
+
+        hr {
+
+            width: 600px;
+            border: 5px solid green;
+        }
+
+        #query {
+
+            font-size: 20px;
+            color: white;
+        }
+
+        #container .star1 {
+            animation-delay: 0s;
+
+            background: url("star1.png")
+        }
+
+
+
+        @keyframes animate {
+
+            60%,
+            20%,
+            40%,
+            60%,
+            80%,
+            100% {
+                opacity: 0;
+            }
+
+            0%,
+            30%,
+            50%,
+            70%,
+            90%,
+            100% {
+                opacity: 2;
+            }
+        }
+
+        /* popup */
+
+        
+
+        #popUp{
+
+            display: none;
+           
+            width: 500px;
+            height: 600px;
+            background-color: black;
+            color: white;
+            box-sizing: border-box;
+            margin: auto;
+            border: 2px solid rgb(172, 49, 49);
+            border-radius: 10px;
+            text-align: right;
+            align-items: center;
+            justify-content: center;
+           
+            
+
+        }
+
+        
+        #close{
+
+            font-size: 32px;
+            color: red;
+            font-weight: 900;
+            top:0;
+            cursor: pointer;
+        }
+
+
+
+
+    </style>
+</head>
+
+<body>
+
+
+
+
+    <div id="container">
+
+
+
+        <div class="star star1"></div>
+
+
+
+        <div id="box">
+
+            <!-- https://upload.wikimedia.org/wikipedia/commons/b/b9/Marvel_Logo.svg -->
+
+            <img src="marvel.gif"
+                alt="" class="src">
+
+            <div>
+                <input type="text" oninput="debounce(main, 1000)" id="query" placeholder="Search characters">
+                <hr>
+                <div id="win"></div>
+
+            </div>
+
+        </div>
+
+        <div id = "popUp">
+            <button id ="close" onClick = "closebtn()">x</button>
+        </div>
+
+
+
+    </div>
+    <!-- </section> -->
+
+</body>
+
+</html>
+
+<script>
+
+    // https://swapi.dev/api/people/?search={your_search_term}
+
+    var timerId;
+
+    let win = document.getElementById("win")
+
+
+
+
+    //close
+
+    function closebtn(){
+
+        // alert("sagar")
+
+        var closebtn = document.getElementById("close")
+
+        var pop = document.getElementById("popUp")
+
+        pop.style.display = "none"
+
+        
+
+
+    }
+
+
+
+
+
+
+
+
+
+    async function searchCharacter(c) {
+
+        if(c == ""){
+
+            return -1;
+        }
+
+        // https://swapi.dev/api/people/?search=${c}
+        let res = await fetch(`https://superheroapi.com/api/4968033299894322/search/${c}`)
+
+        let data = await res.json()
+        console.log(data)
+
+        return data.results;
+
+    }
+
+    function appendChar(c) {
+
+        win.innerText=""
+
+        // let p = document.createElement("p")
+
+        // p.innerHTML=""
+
+        
+
+        let character = document.getElementById("query").value
+
+        // console.log("character:", character)
+
+        c.forEach(({ id, name, image }) => {
+
+            // console.log("id:",id)
+
+            // console.log("image:", image)
+
+
+
+
+
+            let p = document.createElement("p")
+
+          
+          
+
+            p.innerHTML = name
+
+
+           
+
+
+            p.style.padding="20px";
+
+
+            win.append(p)
+
+            
+
+        
+            win.style.alignContent = "10px";
+
+            // console.log("win:", win.innerText)
+
+        });
+    }
+
+    async function main() {
+
+        let character = document.getElementById("query").value
+
+        // let win = document.getElementById("win")
+
+
+
+        let char = await searchCharacter(character)
+        console.log("char",char)
+
+        if(char == -1){
+
+            win.innerText=""
+
+            
+
+        }else{
+
+        appendChar(char)
+
+        }
+
+
+    }
+
+    function debounce(function1, delay) {
+
+        if (timerId) {
+
+            clearTimeout(timerId)
+        }
+
+
+
+        timerId = setTimeout(() => {
+
+            function1()
+
+
+        }, delay)
+
+
+    }
+
+
+
+
+</script>
